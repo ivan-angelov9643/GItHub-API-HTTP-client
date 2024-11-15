@@ -55,7 +55,7 @@ func fetchRepositories(username string) ([]Repository, error) {
 	return repos, nil
 }
 
-func fetchLanguages(username, repo string) (LanguageData, error) {
+func fetchLanguages(username, repo string) (map[string]int, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.github.com/repos/%s/%s/languages", username, repo), nil)
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func fetchLanguages(username, repo string) (LanguageData, error) {
 	}
 	defer resp.Body.Close()
 
-	var languages LanguageData
+	var languages map[string]int
 	err = json.NewDecoder(resp.Body).Decode(&languages)
 	if err != nil {
 		return nil, err
