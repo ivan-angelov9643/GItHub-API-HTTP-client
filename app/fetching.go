@@ -9,27 +9,27 @@ import (
 
 var token = os.Getenv("GITHUB_TOKEN")
 
-func fetchUser(username string) (*User, error) {
+func fetchUser(username string) (User, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://api.github.com/users/%s", username), nil)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("token %s", token))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
 	defer resp.Body.Close()
 
 	var user User
 	err = json.NewDecoder(resp.Body).Decode(&user)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func fetchRepositories(username string) ([]Repository, error) {
